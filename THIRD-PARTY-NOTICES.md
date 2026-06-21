@@ -8,8 +8,7 @@ This project redistributes `libfdk-aac-2.dll`, built from the Fraunhofer FDK AAC
 - Source version: 2.0.3
 - Windows binary source: MSYS2 package `mingw-w64-x86_64-fdk-aac` version `2.0.3-1`
 - License: Fraunhofer FDK AAC Codec Library for Android software license
-- License text: included in `LICENSE-FDK-AAC.txt`
-- Complete corresponding source: available in this repository under `third-party/fdk-aac/source/`
+- License text: included in `third-party\fdk-aac\LICENSE-FDK-AAC.txt`
 
 This project does not modify the FDK-AAC source code.
 
