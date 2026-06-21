@@ -1,8 +1,8 @@
 // ==WindhawkMod==
 // @id              shadowplay-audio-codec-replacer
 // @name            Shadowplay Audio Codec Replacer
-// @description     Replaces NVIDIA's AAC encoder with a custom in-process encoder
-// @version         0.3.0
+// @description     Replaces NVIDIA's AAC encoder with a custom in-process encoder.
+// @version         0.4.0
 // @author          Mugnum
 // @include         nvcontainer.exe
 // ==/WindhawkMod==
@@ -10,6 +10,15 @@
 // ==WindhawkModSettings==
 /*
 - BridgeDllPath: C:\PathToFiles\ShadowPlayAudioBridge.dll
+  $name: Bridge DLL path
+  $description: Full path to ShadowPlayAudioBridge.dll.
+
+- BitrateKbps: 384
+  $name: AAC bitrate per track (kb/s)
+  $description: >
+    AAC-LC bitrate for each ShadowPlay audio stream. Allowed values are
+    64 through 576 kb/s, in 8 kb/s increments. Restart nvcontainer.exe
+    after changing this setting.
 */
 // ==/WindhawkModSettings==
 
@@ -23,15 +32,24 @@ using CoCreateInstance_t = HRESULT(WINAPI*)(
     DWORD context,
     REFIID requestedInterface,
     LPVOID* result
-);
+    );
+
+using ConfigureReplacementAudioEncoder_t = HRESULT(WINAPI*)(
+    UINT32 bitrateKbps
+    );
 
 using CreateReplacementAudioEncoder_t = HRESULT(WINAPI*)(
     IUnknown* originalEncoder,
     REFIID requestedInterface,
     void** result
-);
+    );
 
 static CoCreateInstance_t CoCreateInstance_Original = nullptr;
+
+static HMODULE g_bridgeModule = nullptr;
+
+static CreateReplacementAudioEncoder_t
+g_createReplacementAudioEncoder = nullptr;
 
 // Microsoft AAC encoder:
 // {93AF0C51-2275-45D2-A35B-F2BA21CAED00}
@@ -43,7 +61,98 @@ static const CLSID kMicrosoftAacEncoderClsid =
     { 0xA3, 0x5B, 0xF2, 0xBA, 0x21, 0xCA, 0xED, 0x00 }
 };
 
-static std::wstring g_bridgeDllPath;
+bool LoadAndConfigureBridge()
+{
+    PCWSTR configuredPath =
+        Wh_GetStringSetting(L"BridgeDllPath");
+
+    if (!configuredPath || !*configuredPath)
+    {
+        Wh_Log(L"[Audio bridge] BridgeDllPath is empty");
+        return false;
+    }
+
+    std::wstring bridgeDllPath = configuredPath;
+    Wh_FreeStringSetting(configuredPath);
+
+    int bitrateKbps = Wh_GetIntSetting(L"BitrateKbps");
+
+    if (bitrateKbps < 64 ||
+        bitrateKbps > 576 ||
+        (bitrateKbps % 8) != 0)
+    {
+        Wh_Log(
+            L"[Audio bridge] Invalid BitrateKbps=%d. "
+            L"Use 64-576 in 8 kb/s increments.",
+            bitrateKbps
+        );
+
+        return false;
+    }
+
+    g_bridgeModule = LoadLibraryW(bridgeDllPath.c_str());
+
+    if (!g_bridgeModule)
+    {
+        Wh_Log(
+            L"[Audio bridge] Failed to load bridge DLL. "
+            L"Path=%s Error=%lu",
+            bridgeDllPath.c_str(),
+            GetLastError()
+        );
+
+        return false;
+    }
+
+    auto ConfigureReplacementAudioEncoder =
+        reinterpret_cast<ConfigureReplacementAudioEncoder_t>(
+            GetProcAddress(
+                g_bridgeModule,
+                "ConfigureReplacementAudioEncoder"
+            )
+            );
+
+    g_createReplacementAudioEncoder =
+        reinterpret_cast<CreateReplacementAudioEncoder_t>(
+            GetProcAddress(
+                g_bridgeModule,
+                "CreateReplacementAudioEncoder"
+            )
+            );
+
+    if (!ConfigureReplacementAudioEncoder ||
+        !g_createReplacementAudioEncoder)
+    {
+        Wh_Log(
+            L"[Audio bridge] Required bridge export was not found"
+        );
+
+        return false;
+    }
+
+    HRESULT configurationResult =
+        ConfigureReplacementAudioEncoder(
+            static_cast<UINT32>(bitrateKbps)
+        );
+
+    if (FAILED(configurationResult))
+    {
+        Wh_Log(
+            L"[Audio bridge] Bitrate configuration failed. "
+            L"HRESULT=0x%08X",
+            configurationResult
+        );
+
+        return false;
+    }
+
+    Wh_Log(
+        L"[Audio bridge] Bridge configured for %d kb/s per audio track",
+        bitrateKbps
+    );
+
+    return true;
+}
 
 HRESULT WINAPI CoCreateInstance_Hook(
     REFCLSID classId,
@@ -68,47 +177,21 @@ HRESULT WINAPI CoCreateInstance_Hook(
         return hr;
     }
 
-    HMODULE bridgeModule = LoadLibraryW(g_bridgeDllPath.c_str());
-
-    if (!bridgeModule)
-    {
-        Wh_Log(L"[Audio bridge] Failed to load bridge DLL. Path=%s Error=%lu",
-            g_bridgeDllPath.c_str(),
-            GetLastError());
-
-        return hr;
-    }
-
-    auto CreateReplacementAudioEncoder =
-        reinterpret_cast<CreateReplacementAudioEncoder_t>(
-            GetProcAddress(
-                bridgeModule,
-                "CreateReplacementAudioEncoder"
-            )
-        );
-
-    if (!CreateReplacementAudioEncoder)
-    {
-        Wh_Log(
-            L"[Audio bridge] Export CreateReplacementAudioEncoder was not found"
-        );
-
-        return hr;
-    }
-
     void* replacement = nullptr;
 
-    HRESULT replacementHr = CreateReplacementAudioEncoder(
-        static_cast<IUnknown*>(*result),
-        requestedInterface,
-        &replacement
-    );
+    HRESULT replacementResult =
+        g_createReplacementAudioEncoder(
+            static_cast<IUnknown*>(*result),
+            requestedInterface,
+            &replacement
+        );
 
-    if (FAILED(replacementHr) || !replacement)
+    if (FAILED(replacementResult) || !replacement)
     {
         Wh_Log(
-            L"[Audio bridge] Bridge declined replacement. HRESULT=0x%08X",
-            replacementHr
+            L"[Audio bridge] Bridge declined replacement. "
+            L"HRESULT=0x%08X",
+            replacementResult
         );
 
         return hr;
@@ -118,20 +201,16 @@ HRESULT WINAPI CoCreateInstance_Hook(
     *result = replacement;
 
     Wh_Log(L"[Audio bridge] AAC encoder instance replaced");
+
     return S_OK;
 }
 
 BOOL Wh_ModInit()
 {
-    PCWSTR configuredPath = Wh_GetStringSetting(L"BridgeDllPath");
-
-    if (!configuredPath || !*configuredPath)
+    if (!LoadAndConfigureBridge())
     {
-        Wh_Log(L"[Audio bridge] BridgeDllPath is empty");
         return FALSE;
     }
-
-    g_bridgeDllPath = configuredPath;
 
     HMODULE combase = GetModuleHandleW(L"combase.dll");
 
@@ -143,7 +222,7 @@ BOOL Wh_ModInit()
 
     void* target = reinterpret_cast<void*>(
         GetProcAddress(combase, "CoCreateInstance")
-    );
+        );
 
     if (!target)
     {
@@ -154,13 +233,19 @@ BOOL Wh_ModInit()
     if (!Wh_SetFunctionHook(
         target,
         reinterpret_cast<void*>(CoCreateInstance_Hook),
-        reinterpret_cast<void**>(&CoCreateInstance_Original)
+        reinterpret_cast<void**>(
+            &CoCreateInstance_Original
+            )
     ))
     {
-        Wh_Log(L"[Audio bridge] Failed to hook CoCreateInstance");
+        Wh_Log(
+            L"[Audio bridge] Failed to hook CoCreateInstance"
+        );
+
         return FALSE;
     }
 
     Wh_Log(L"[Audio bridge] CoCreateInstance hook installed");
+
     return TRUE;
 }

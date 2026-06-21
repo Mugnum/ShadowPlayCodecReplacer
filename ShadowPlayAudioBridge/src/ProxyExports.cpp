@@ -8,6 +8,14 @@ using ShadowPlayAudioBridge::AacEncoderTransform;
 using ShadowPlayAudioBridge::Settings::kEnableReplacement;
 
 extern "C" __declspec(dllexport)
+HRESULT WINAPI ConfigureReplacementAudioEncoder(
+	UINT32 bitrateKbps)
+{
+	return ShadowPlayAudioBridge::Settings::
+		ConfigureBitrateKbps(bitrateKbps);
+}
+
+extern "C" __declspec(dllexport)
 HRESULT WINAPI CreateReplacementAudioEncoder(
 	IUnknown* originalEncoder,
 	REFIID requestedInterface,

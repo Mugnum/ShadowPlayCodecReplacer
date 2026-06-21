@@ -105,7 +105,7 @@ namespace ShadowPlayAudioBridge
 			set(AACENC_SAMPLERATE, Settings::kSampleRate) &&
 			set(AACENC_CHANNELMODE, MODE_2) &&
 			set(AACENC_CHANNELORDER, 1) &&
-			set(AACENC_BITRATE, Settings::kBitrate) &&
+			set(AACENC_BITRATE, Settings::GetBitrateBitsPerSecond()) &&
 			set(AACENC_TRANSMUX, TT_MP4_RAW);
 
 		if (!configured)

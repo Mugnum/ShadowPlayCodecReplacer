@@ -3,5 +3,24 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/Documentation/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+    <File Path="THIRD-PARTY-NOTICES.md" />
+  </Folder>
+  <Folder Name="/Documentation/fdk-aac/">
+    <File Path="third-party/fdk-aac/LICENSE-FDK-AAC.txt" />
+    <File Path="third-party/fdk-aac/SOURCE.md" />
+  </Folder>
+  <Folder Name="/Media/">
+    <File Path="media/MediaInfo-1.png" />
+    <File Path="media/MediaInfo-2.png" />
+    <File Path="media/Windhawk-Settings.png" />
+  </Folder>
+  <Folder Name="/Scripts/">
+    <File Path="scripts/shadowplay-audio-codec-replacer.hw.cpp" />
+    <File Path="scripts/Stop-NvContainer.ps1" />
+  </Folder>
   <Project Path="ShadowPlayAudioBridge/ShadowPlayAudioBridge.vcxproj" Id="65ab813b-f310-47ad-9208-b786c2421780" />
 </Solution>

@@ -163,14 +163,14 @@ namespace ShadowPlayAudioBridge
 		{
 			hr = mediaType->SetUINT32(
 				MF_MT_AVG_BITRATE,
-				Settings::kBitrate);
+				Settings::GetBitrateBitsPerSecond());
 		}
 
 		if (SUCCEEDED(hr))
 		{
 			hr = mediaType->SetUINT32(
 				MF_MT_AUDIO_AVG_BYTES_PER_SECOND,
-				Settings::kAverageBytesPerSecond);
+				Settings::GetAverageBytesPerSecond());
 		}
 
 		if (SUCCEEDED(hr))
@@ -307,14 +307,14 @@ namespace ShadowPlayAudioBridge
 		{
 			hr = configuredType->SetUINT32(
 				MF_MT_AVG_BITRATE,
-				Settings::kBitrate);
+				Settings::GetBitrateBitsPerSecond());
 		}
 
 		if (SUCCEEDED(hr))
 		{
 			hr = configuredType->SetUINT32(
 				MF_MT_AUDIO_AVG_BYTES_PER_SECOND,
-				Settings::kAverageBytesPerSecond);
+				Settings::GetAverageBytesPerSecond());
 		}
 
 		if (SUCCEEDED(hr))

@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Documentation">
-      <UniqueIdentifier>{7d440206-e41e-42f8-bfcd-977587810d65}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Documentation\fdk-aac">
-      <UniqueIdentifier>{777d3015-3cf2-4a03-8392-f61fd5a836f6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ProxyExports.cpp">
@@ -31,6 +25,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AacEncoderTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CodecSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,27 +44,5 @@
     <ClInclude Include="include\AacEncoderTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\.gitignore">
-      <Filter>Documentation</Filter>
-    </None>
-    <None Include="..\README.md">
-      <Filter>Documentation</Filter>
-    </None>
-    <None Include="..\THIRD-PARTY-NOTICES.md">
-      <Filter>Documentation</Filter>
-    </None>
-    <None Include="..\third-party\fdk-aac\SOURCE.md">
-      <Filter>Documentation\fdk-aac</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\LICENSE.txt">
-      <Filter>Documentation</Filter>
-    </Text>
-    <Text Include="..\third-party\fdk-aac\LICENSE-FDK-AAC.txt">
-      <Filter>Documentation\fdk-aac</Filter>
-    </Text>
   </ItemGroup>
 </Project>
