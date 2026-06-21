@@ -3,12 +3,12 @@ Audio codec replacer for NVIDIA ShadowPlay, allowing to get video recordings
 with audio bitrate above 192 kbps.
 
 
-## Demonstration
+### Demonstration
 ![alt text](https://raw.githubusercontent.com/Mugnum/ShadowPlayCodecReplacer/refs/heads/master/media/MediaInfo-1.png)
 ![alt text](https://raw.githubusercontent.com/Mugnum/ShadowPlayCodecReplacer/refs/heads/master/media/MediaInfo-2.png)
 
 
-## Installation
+### Installation
 - Download [latest release](https://github.com/Mugnum/ShadowPlayCodecReplacer/releases) and extract it's contents
 to a permanent location, such as `%LOCALAPPDATA%\ShadowPlayAudioCodecReplacer\ShadowPlayAudioBridge.dll`.
 - Install [WindHawk](https://windhawk.net/).
@@ -17,11 +17,11 @@ to a permanent location, such as `%LOCALAPPDATA%\ShadowPlayAudioCodecReplacer\Sh
 - Restart nvcontainer.exe: [PowerShell script](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/scripts/Stop-NvContainer.ps1).
 
 
-## Configuration
+### Configuration
 ![alt text](https://raw.githubusercontent.com/Mugnum/ShadowPlayCodecReplacer/refs/heads/master/media/Windhawk-Settings.png)
 
 
-## Third-party components
+### Third-party components
 This project includes FDK-AAC headers and libfdk-aac-2.dll, which are
 licensed separately. See [THIRD-PARTY-NOTICES.md](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/THIRD-PARTY-NOTICES.md)
 and [LICENSE-FDK-AAC.txt](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/third-party/fdk-aac/LICENSE-FDK-AAC.txt).
