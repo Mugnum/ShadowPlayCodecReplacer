@@ -3,7 +3,7 @@ Audio codec replacer for NVIDIA's ShadowPlay, allowing to get video recordings
 with audio bitrate above 192 kbps.
 
 ## Installation
-- <TBA>
+- TBA
 
 
 ## Third-party components
