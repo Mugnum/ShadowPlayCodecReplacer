@@ -1,4 +1,4 @@
-# FDK-AAC source
+## FDK-AAC source
 
 Bundled binary:
 - libfdk-aac-2.dll

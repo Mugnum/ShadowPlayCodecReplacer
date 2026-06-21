@@ -1,6 +1,6 @@
-# Third-Party Notices
+## Third-Party Notices
 
-## Fraunhofer FDK AAC Codec Library for Android
+### Fraunhofer FDK AAC Codec Library for Android
 
 This project redistributes `libfdk-aac-2.dll`, built from the Fraunhofer FDK AAC Codec Library for Android.
 

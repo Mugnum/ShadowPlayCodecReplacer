@@ -1,8 +1,8 @@
 // ==WindhawkMod==
 // @id              shadowplay-audio-codec-replacer
 // @name            Shadowplay Audio Codec Replacer
-// @description     Replaces NVIDIA's AAC encoder with a custom in-process encoder.
-// @version         0.4.1
+// @description     Replaces NVIDIA's AAC encoder with a custom in-process encoder
+// @version         0.4.2
 // @author          Mugnum
 // @include         nvcontainer.exe
 // ==/WindhawkMod==
@@ -104,12 +104,22 @@ bool LoadAndConfigureBridge()
         return false;
     }
 
-    int bitrateKbps = Wh_GetIntSetting(L"BitrateKbps");
+    int requestedBitrateKbps = Wh_GetIntSetting(L"BitrateKbps");
+    int bitrateKbps = ((requestedBitrateKbps + 4) / 8) * 8;
 
-    if (bitrateKbps < 64 || bitrateKbps > 576 || (bitrateKbps % 8) != 0)
+    if (bitrateKbps < 64)
     {
-        Wh_Log(L"[Audio bridge] Invalid BitrateKbps=%d. " L"Use 64-576 in 8 kb/s increments.", bitrateKbps);
-        return false;
+        bitrateKbps = 64;
+    }
+    else if (bitrateKbps > 576)
+    {
+        bitrateKbps = 576;
+    }
+
+    if (bitrateKbps != requestedBitrateKbps)
+    {
+        Wh_Log(L"[Audio bridge] BitrateKbps=%d rounded to %d kb/s.",
+            requestedBitrateKbps, bitrateKbps);
     }
 
     g_bridgeModule = LoadLibraryW(bridgeDllPath.c_str());
