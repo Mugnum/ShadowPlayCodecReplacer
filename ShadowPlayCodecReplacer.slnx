@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ShadowPlayAudioBridge/ShadowPlayAudioBridge.vcxproj" Id="65ab813b-f310-47ad-9208-b786c2421780" />
+</Solution>
