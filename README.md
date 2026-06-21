@@ -1,5 +1,5 @@
 ## ShadowPlay Codec Replacer
-Audio codec replacer for NVIDIA's ShadowPlay, allowing to get video recordings
+Audio codec replacer for NVIDIA ShadowPlay, allowing to get video recordings
 with audio bitrate above 192 kbps.
 
 
