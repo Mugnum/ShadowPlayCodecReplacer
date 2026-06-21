@@ -10,11 +10,11 @@ with audio bitrate above 192 kbps.
 
 ## Installation
 - Download [latest release](https://github.com/Mugnum/ShadowPlayCodecReplacer/releases) and extract it's contents
-to a permanent location, such as `%LOCALAPPDATA%\ShadowPlayAudioCodecReplacer\ShadowPlayAudioBridge.dll`.
-- Install [WindHawk](https://windhawk.net/).
-- Create new WindHawk mod: [shadowplay-audio-codec-replacer](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/scripts/shadowplay-audio-codec-replacer.hw.cpp).
-- Compile and enable the mod.
-- Restart nvcontainer.exe: [PowerShell script](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/scripts/Stop-NvContainer.ps1).
+to a permanent location, such as `%LOCALAPPDATA%\ShadowPlayAudioCodecReplacer\ShadowPlayAudioBridge.dll`
+- Install [WindHawk](https://windhawk.net/)
+- Create new WindHawk mod: [shadowplay-audio-codec-replacer](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/scripts/shadowplay-audio-codec-replacer.hw.cpp)
+- Compile and enable the mod
+- Restart nvcontainer.exe: [PowerShell script](https://github.com/Mugnum/ShadowPlayCodecReplacer/blob/master/scripts/Stop-NvContainer.ps1)
 
 
 ## Configuration
