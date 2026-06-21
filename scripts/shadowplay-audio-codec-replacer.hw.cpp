@@ -9,7 +9,7 @@
 
 // ==WindhawkModSettings==
 /*
-- BridgeDllPath: C:\PathToFiles\ShadowPlayAudioBridge.dll
+- BridgeDllPath: %LOCALAPPDATA%\ShadowPlayAudioCodecReplacer\ShadowPlayAudioBridge.dll
   $name: Bridge DLL path
   $description: Full path to ShadowPlayAudioBridge.dll.
 
